@@ -35,7 +35,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private static final String TAG = "MainActivity";
 
     private String[] FilePathStrings;
@@ -57,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,27 +71,24 @@ public class MainActivity extends AppCompatActivity {
                 lastDirectory = pathHistory.get(count);
                 if(lastDirectory.equals(adapterView.getItemAtPosition(i))){
                     Log.d(TAG, "lvInternalStorage: Selected a file for upload: " + lastDirectory);
-
                     //Execute method for reading the excel data.
                     readExcelData(lastDirectory);
-
-                }else
-                {
+                }
+                else {
                     count++;
                     pathHistory.add(count,(String) adapterView.getItemAtPosition(i));
                     checkInternalStorage();
                     Log.d(TAG, "lvInternalStorage: " + pathHistory.get(count));
                 }
-
             }
         });
 
         btnUpDirectory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(count == 0){
+                if (count == 0) {
                     Log.d(TAG, "btnUpDirectory: You have reached the highest level directory.");
-                }else{
+                } else {
                     pathHistory.remove(count);
                     count--;
                     checkInternalStorage();
@@ -115,108 +110,98 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-        private void readExcelData(String filePath) {
+    private void readExcelData(String filePath) {
 
-            File inputFile= new File(filePath);
-            try{
-                //pamti imputStream  fajla koji smo izabrali
-                InputStream inputStream=  new FileInputStream(inputFile);
-                HSSFWorkbook workbook= new HSSFWorkbook(inputStream);
-                //za vise sheetova
-                HSSFSheet sheet= workbook.getSheetAt(0);
-                int rowsCount= sheet.getPhysicalNumberOfRows();
-                //evalutor da bi znao kojeg tipa podatka je celija
-                FormulaEvaluator formulaEvaluator= workbook.getCreationHelper().createFormulaEvaluator();
-                StringBuilder sb= new StringBuilder();
-                //r krece od 1 jer necemo prvi red
-                for(int r=1;r<rowsCount;r++)
-                {
-                    Row row=sheet.getRow(r);
-                    int cellsCount = row.getPhysicalNumberOfCells();
-                    //celije krecu od 1 zbor jebenog plusa i cellCount -1 zbog zadnje prazne celije
-                    for(int c=1;c<cellsCount-1;c++)
-                    {
-                        if(c==3 || c==4 )
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            String value = getCellAsString(row,c, formulaEvaluator);
-                            sb.append(value+"`");
-                        }
-                    }
-                    sb.append(";");
-
-
-                }
-
-                parseStringBuilder(sb);
-            }catch (FileNotFoundException e){
-                //log
-            }catch (IOException e){
-                //log
-            }
-
-
-
-        }
-
-        private void parseStringBuilder(StringBuilder sb) {
-            Log.d(TAG, "started parsing");
-            String[] rows= sb.toString().split(";");
-            for(int i=0;i<rows.length;i++)
+        File inputFile= new File(filePath);
+        try{
+            //pamti imputStream  fajla koji smo izabrali
+            InputStream inputStream=  new FileInputStream(inputFile);
+            HSSFWorkbook workbook= new HSSFWorkbook(inputStream);
+            //za vise sheetova
+            HSSFSheet sheet= workbook.getSheetAt(0);
+            int rowsCount= sheet.getPhysicalNumberOfRows();
+            //evalutor da bi znao kojeg tipa podatka je celija
+            FormulaEvaluator formulaEvaluator= workbook.getCreationHelper().createFormulaEvaluator();
+            StringBuilder sb= new StringBuilder();
+            //r krece od 1 jer necemo prvi red
+            for(int r=1;r<rowsCount;r++)
             {
-                String[] column= rows[i].split("`");
-                String id= column[0];
-                String kolicina = column[2];
-                String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
-                Log.d(TAG, "data from row"+cellInfo);
-                proizvodi.add(new Proizvod(id,column[1],kolicina));
-                //proizvodi.add(new Proizvod(id,column[2],kolicina));
+                Row row=sheet.getRow(r);
+                int cellsCount = row.getPhysicalNumberOfCells();
+                //celije krecu od 1 zbor jebenog plusa i cellCount -1 zbog zadnje prazne celije
+                for(int c=1;c<cellsCount-1;c++)
+                {
+                    if(c==3 || c==4 )
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        String value = getCellAsString(row,c, formulaEvaluator);
+                        sb.append(value+"`");
+                    }
+                }
+                sb.append(";");
+            }
+
+            parseStringBuilder(sb);
+        }catch (FileNotFoundException e){
+            //log
+        }catch (IOException e){
+            //log
+        }
+    }
+
+    private void parseStringBuilder(StringBuilder sb) {
+        Log.d(TAG, "started parsing");
+        String[] rows= sb.toString().split(";");
+        for(int i=0;i<rows.length;i++)
+        {
+            String[] column= rows[i].split("`");
+            String id= column[0];
+            String kolicina = column[2];
+            String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
+            Log.d(TAG, "data from row"+cellInfo);
+
+            proizvodi.add(new Proizvod(id,column[1],kolicina));
+        }
+
+        TextView tw = (TextView) findViewById(R.id.textView);
+        tw.setText(proizvodi.get(1).getId());
+        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+    }
+
+    private String getCellAsString(Row row, int c, FormulaEvaluator formulaEvaluator) {
+
+        String value = "";
+        try {
+            Cell cell = row.getCell(c);
+            CellValue cellValue = formulaEvaluator.evaluate(cell);
+            switch (cellValue.getCellType()) {
+                case Cell.CELL_TYPE_BOOLEAN:
+                    value = "" + cellValue.getBooleanValue();
+                    break;
+                case Cell.CELL_TYPE_NUMERIC:
+                    double numericValue = cellValue.getNumberValue();
+                    value = "" + numericValue;
+                    break;
+                case Cell.CELL_TYPE_STRING:
+                    value = "" + cellValue.getStringValue();
+                    break;
+                default:
 
             }
-            TextView tw = (TextView) findViewById(R.id.textView);
-            tw.setText(proizvodi.get(1).getId());
-            Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
-        }
-
-
-        private String getCellAsString(Row row, int c, FormulaEvaluator formulaEvaluator) {
-
-            String value = "";
-            try {
-                Cell cell = row.getCell(c);
-                CellValue cellValue = formulaEvaluator.evaluate(cell);
-                switch (cellValue.getCellType()) {
-                    case Cell.CELL_TYPE_BOOLEAN:
-                        value = "" + cellValue.getBooleanValue();
-                        break;
-                    case Cell.CELL_TYPE_NUMERIC:
-                        double numericValue = cellValue.getNumberValue();
-                        value = "" + numericValue;
-                        break;
-                    case Cell.CELL_TYPE_STRING:
-                        value = "" + cellValue.getStringValue();
-                        break;
-                    default:
-
-                }
-            }catch(Exception e){}
-            return value;
-        }
+        }catch(Exception e){}
+        return value;
+    }
 
     private void checkInternalStorage(){
         try {
-
-            if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            {
+            if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 toastMessage("Nemate SD karticu!");
             }
             else{
-
                 file = new File (pathHistory.get(count));
-
             }
             listFile = file.listFiles();
             FilePathStrings= new String[listFile.length];
@@ -230,29 +215,21 @@ public class MainActivity extends AppCompatActivity {
                     (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
             lvInternalStorage.setAdapter(adapter);
 
-
-
-
-
         }catch(NullPointerException e){
 
         }
 
     }
 
-        private void toastMessage(String message) {
-
-            Toast.makeText(MainActivity.this,message, LENGTH_SHORT).show();
-        }
-    //});
+    private void toastMessage(String message) {
+        Toast.makeText(MainActivity.this,message, LENGTH_SHORT).show();
+    }
 
     private void verifyPermissions(){
 
-
-        int permissionCallPhone = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE);
+        //int permissionCallPhone = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE);
 
         int permissionExternalMemory = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
 
         if (permissionExternalMemory != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -262,6 +239,4 @@ public class MainActivity extends AppCompatActivity {
             );
         }
     }
-
-
 }
