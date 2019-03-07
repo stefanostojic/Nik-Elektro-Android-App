@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "lvInternalStorage: Selected a file for upload: " + lastDirectory);
                     //Execute method for reading the excel data.
                     readExcelData(lastDirectory);
+
+                    TextView tw = (TextView) findViewById(R.id.textView);
+                    tw.setText(proizvodi.get(1).getId());
+                    Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+
                 }
                 else {
                     count++;
@@ -166,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
             proizvodi.add(new Proizvod(id,column[1],kolicina));
         }
 
-        TextView tw = (TextView) findViewById(R.id.textView);
+        /*TextView tw = (TextView) findViewById(R.id.textView);
         tw.setText(proizvodi.get(1).getId());
-        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());*/
     }
 
     private String getCellAsString(Row row, int c, FormulaEvaluator formulaEvaluator) {

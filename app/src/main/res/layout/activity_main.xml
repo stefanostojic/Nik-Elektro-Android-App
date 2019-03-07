@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/relLayout"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_marginLeft="15dp"
@@ -38,15 +37,37 @@
             android:layout_toLeftOf="@+id/btnViewSDCard"
             android:layout_toEndOf="@+id/btnUpDirectory"
             android:layout_toRightOf="@+id/btnUpDirectory"
-            android:text="gbynnu"
-            android:textSize="10sp" />
+            android:text="@string/app_name"
+            android:textSize="10sp" />-
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+
+            <EditText
+                android:id="@+id/editTextID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Unesi ID proizvoda"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btnPretraga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pretraga" />
+        </LinearLayout>-->
 
     </RelativeLayout>
 
 
     <ListView
-        android:layout_below="@+id/relLayout"
+        android:id="@+id/lvInternalStorage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lvInternalStorage"></ListView>
+        android:layout_below="@+id/relLayout"></ListView>
 </RelativeLayout>
