@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/editTextPretraga"
+            android:id="@+id/etPretraga"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvNaziv"
+            android:id="@+id/tvIme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -63,9 +63,12 @@
             android:id="@+id/tvKolicina"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:text="Kolicina"
-            tools:layout_editor_absoluteX="336dp"
-            tools:layout_editor_absoluteY="58dp" />
+            app:layout_constraintStart_toEndOf="@+id/tvIme"
+            app:layout_constraintTop_toTopOf="@+id/tvIme" />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,11 +45,15 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
         final Context c = this.getBaseContext();
 
-        final ListView lvRezultatiPretrage = (ListView) findViewById(R.id.lvRezultatiPretrage);
+//        final ListView lvRezultatiPretrage = (ListView) findViewById(R.id.lvRezultatiPretrage);
 
-        final EditText textEditPretraga = (EditText) findViewById(R.id.editTextID);
+        final EditText textEditPretraga = (EditText) findViewById(R.id.etPretraga);
 
-        lvRezultatiPretrage.setVisibility(View.INVISIBLE);
+        final TextView tvIme = (TextView) findViewById(R.id.tvIme);
+        final TextView tvKolicina = (TextView) findViewById(R.id.tvKolicina);
+
+
+        //lvRezultatiPretrage.setVisibility(View.INVISIBLE);
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,9 +61,9 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
                 Log.d(TAG,"Dugme \"Pretraga\" je kliknuto");
 
-                ProizvodListAdapter adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
-                lvRezultatiPretrage.setAdapter(adapter);
-                lvRezultatiPretrage.setVisibility(View.VISIBLE);
+//                ProizvodListAdapter adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
+//                lvRezultatiPretrage.setAdapter(adapter);
+//                lvRezultatiPretrage.setVisibility(View.VISIBLE);
 
                 Log.d(TAG,"ListView je prikazan");
 
@@ -75,18 +80,23 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 }
 
 //                Log.d(TAG,"" + textEditPretraga.text);
-                ArrayList<Proizvod> trazeniProizvod = new ArrayList<>();
+//                ArrayList<Proizvod> trazeniProizvod = new ArrayList<>();
+
+                Proizvod pronadjeniProizvod;
 
                 if (textEditPretraga.getText().toString() != "") {
                     boolean uspesnoPronadjenProizvod = false;
                     //Proizvod trazeniProizvod;
                     for (Proizvod p : MainActivity.proizvodi) {
                         /*if (p.getId().split("\\.")[0].equals(textEditPretraga.getText().toString())) {*/
-                        if (p.getId().contains(textEditPretraga.getText().toString())) {
-                            uspesnoPronadjenProizvod = true;
-                            trazeniProizvod.add(p);
+                        if (p.getId().equals(textEditPretraga.getText().toString())) {
+                            tvIme.setText(p.getIme());
+                            tvKolicina.setText(p.getKolicina());
+//                            uspesnoPronadjenProizvod = true;
+//                            trazeniProizvod.add(p);
+//                            pronadjeniProizvod = p;
                             Log.d(TAG,"Proizvod je pronadjen");
-//                            break;
+                            break;
                         }
                         else
                         {
@@ -106,7 +116,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                     }
                 }
                 else {
-                    adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
+//                    adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
                     toastMessage("Niste uneli ID za pretragu");
                 }
 
@@ -118,13 +128,13 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             }
         });
 
-        lvRezultatiPretrage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*lvRezultatiPretrage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Proizvod p = (Proizvod) lvRezultatiPretrage.getItemAtPosition(position);
                 toastMessage(p.getIme().toString());
             }
-        });
+        });*/
     }
 
     private void toastMessage(String message) {
