@@ -75,13 +75,11 @@ public class MainActivity extends AppCompatActivity {
                     //Execute method for reading the excel data.
                     readExcelData(lastDirectory);
 
-                    TextView tw = (TextView) findViewById(R.id.textView);
-                    tw.setText(proizvodi.get(1).getId());
                     Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
 
                     toastMessage("Podaci su ucitani");
 
-                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
+                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
                     startActivity(intentPretraga);
 
                 }
@@ -193,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
                     value = "" + cellValue.getBooleanValue();
                     break;
                 case Cell.CELL_TYPE_NUMERIC:
-                    double numericValue = cellValue.getNumberValue();
+//                    double numericValue = cellValue.getNumberValue();
+                    int numericValue = (int) cellValue.getNumberValue();
                     value = "" + numericValue;
                     break;
                 case Cell.CELL_TYPE_STRING:

@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class Pretraga_Activity extends AppCompatActivity {
 
+    private static final String TAG = "Pretraga_Activity123";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,30 +38,54 @@ public class Pretraga_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//
+                Log.d(TAG,"Dugme \"Pretraga\" je kliknuto");
 
                 ProizvodListAdapter adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
                 lvRezultatiPretrage.setAdapter(adapter);
+                lvRezultatiPretrage.setVisibility(View.VISIBLE);
 
-                ArrayList<Proizvod> lista = new ArrayList<>();
+                Log.d(TAG,"ListView je prikazan");
 
-                toastMessage("uneti id"+btnPretraga.getText());
+                Log.d(TAG,"MainActivity.proizvodi.get(0).getId().toString() = " + MainActivity.proizvodi.get(0).getId().toString());
+                Log.d(TAG,"textEditPretraga.getText().toString() = " + textEditPretraga.getText().toString());
 
-                if (false) {
-                    boolean flag = false;
-                    Proizvod trazeniProizvod;
+                try {
+                    Log.d(TAG, "POPRAVLJEN MainActivity.proizvodi.get(0).getId().toString().split(\"\\.\")[0] = " + MainActivity.proizvodi.get(0).getId().toString().split("\\.")[0]);
+                }
+                catch (Exception e) {
+                    Log.d(TAG, "ID nije mogao da se splituje: " + e.getCause());
+                    String idSaDecimalom = MainActivity.proizvodi.get(0).getId();
+                    Log.d(TAG, "idSaDecimalom.split(\".\").length: " + idSaDecimalom.split(".").length);
+                }
+
+//                Log.d(TAG,"" + textEditPretraga.text);
+                ArrayList<Proizvod> trazeniProizvod = new ArrayList<>();
+
+                if (textEditPretraga.getText().toString() != "") {
+                    boolean uspesnoPronadjenProizvod = false;
+                    //Proizvod trazeniProizvod;
                     for (Proizvod p : MainActivity.proizvodi) {
-                        if (p.getId().equals(textEditPretraga.getText().toString()+".0")) {
-                            flag = true;
-                            lista.add(p);
+                        /*if (p.getId().split("\\.")[0].equals(textEditPretraga.getText().toString())) {*/
+                        if (p.getId().contains(textEditPretraga.getText().toString())) {
+                            uspesnoPronadjenProizvod = true;
+                            trazeniProizvod.add(p);
+                            Log.d(TAG,"Proizvod je pronadjen");
+//                            break;
                         }
                         else
-                            trazeniProizvod = new Proizvod("greska", "greska", "greska");
+                        {
+                            //trazeniProizvod.add(new Proizvod("greska", "greska", "greska"));
+                        }
                     }
 
-                    if (flag) {
-                        //lista.add(trazeniProizvod);
-                        adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, lista);
+                    if (uspesnoPronadjenProizvod) {
+                        lvRezultatiPretrage.setAdapter(null);
+                        lvRezultatiPretrage.setAdapter(new ProizvodListAdapter(c, R.layout.adapter_view_layout, trazeniProizvod));
+//                        adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, trazeniProizvod);
+//                        adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
+                    }
+                    else {
+                        toastMessage("Proizvod nije pronađen");
                     }
                 }
                 else {
@@ -67,10 +93,10 @@ public class Pretraga_Activity extends AppCompatActivity {
                     toastMessage("Niste uneli ID za pretragu");
                 }
 
-                adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, lista);
+                /*adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, lista);
                 lvRezultatiPretrage.setAdapter(adapter);
 
-                lvRezultatiPretrage.setVisibility(View.VISIBLE);
+                lvRezultatiPretrage.setVisibility(View.VISIBLE);*/
 
             }
         });
