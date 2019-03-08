@@ -45,7 +45,7 @@ public class Pretraga_Activity extends AppCompatActivity {
 
                 toastMessage("uneti id"+btnPretraga.getText());
 
-                if (true) {
+                if (false) {
                     boolean flag = false;
                     Proizvod trazeniProizvod;
                     for (Proizvod p : MainActivity.proizvodi) {
@@ -66,9 +66,6 @@ public class Pretraga_Activity extends AppCompatActivity {
                     adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, MainActivity.proizvodi);
                     toastMessage("Niste uneli ID za pretragu");
                 }
-
-
-
 
                 adapter = new ProizvodListAdapter(c, R.layout.adapter_view_layout, lista);
                 lvRezultatiPretrage.setAdapter(adapter);
