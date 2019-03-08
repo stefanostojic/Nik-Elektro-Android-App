@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnUpDirectory,btnSDCard;
 
     ArrayList<String> pathHistory;
-    String lastDirectory;
+    public static String lastDirectory;
     int count = 0;
 
     ListView lvInternalStorage;
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     toastMessage("Podaci su ucitani");
 
                     Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+                    intentPretraga.putExtra("filePath",lastDirectory);
                     startActivity(intentPretraga);
 
                 }
