@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100">
+
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:weightSum="100"
+        android:layout_gravity="left">
+
+        <TextView
+            android:id="@+id/tvId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="10dp"
+            android:text="171003"
+            android:textSize="45sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvIme"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="10dp"
+            android:text="GREBENASTI PREKIDAC 1-0-2 10 MONOF.ELTEX" />
+            <!--android:layout_below="@+id/tvNaziv"-->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvKolicina"
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
+        android:layout_weight="70"
+        android:gravity="center"
+        android:text="173"
+        android:textAlignment="center"
+        android:textSize="48sp" />
+
+</LinearLayout>
