@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
                     toastMessage("Podaci su ucitani");
 
-                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
+                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
                     startActivity(intentPretraga);
 
                 }
