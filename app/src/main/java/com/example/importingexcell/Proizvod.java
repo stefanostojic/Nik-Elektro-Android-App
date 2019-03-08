@@ -35,4 +35,5 @@ public class Proizvod {
         this.ime = ime;
         this.kolicina = kolicina;
     }
+
 }

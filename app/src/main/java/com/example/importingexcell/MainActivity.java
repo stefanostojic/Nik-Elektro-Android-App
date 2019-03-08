@@ -1,6 +1,7 @@
 package com.example.importingexcell;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] FilePathStrings;
     private String[] FileNameStrings;
     private File[] listFile;
-    private ArrayList<Proizvod> proizvodi = new ArrayList<Proizvod>();
+    public static ArrayList<Proizvod> proizvodi = new ArrayList<Proizvod>();
     File file;
 
     Button btnUpDirectory,btnSDCard;
@@ -77,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
                     TextView tw = (TextView) findViewById(R.id.textView);
                     tw.setText(proizvodi.get(1).getId());
                     Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+
+                    toastMessage("Podaci su ucitani");
+
+                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
+                    startActivity(intentPretraga);
 
                 }
                 else {
