@@ -22,14 +22,18 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,21 +57,34 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
     String[] elementiDirektorijuma= MainActivity.lastDirectory.split("/");
     String direktorijum="";
-     public static Proizvod pronadjeniProizvod;
+    public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
 
-
+   // SearchView svPretraga = (SearchView) findViewById(R.id.svPretraga);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pretraga_v2);
 
+//        svPretraga.setQueryHint("ID proizvoda");
+
         final Button btnUpdate = (Button) findViewById(R.id.btnUpdate);
         final Button btnPretraga = (Button) findViewById(R.id.btnPretraga);
         final Context c = this.getBaseContext();
 
-        final EditText textEditPretraga = (EditText) findViewById(R.id.etPretraga);
+        final SearchView textEditPretraga = (SearchView) findViewById(R.id.etPretraga);
+//        ((TextView) textEditPretraga).setTextSize(24);
+
+        /*TextView searchText = (TextView) textEditPretraga.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchText.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);*/
+
+
+        LinearLayout linearLayout1 = (LinearLayout) textEditPretraga.getChildAt(0);
+        LinearLayout linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
+        LinearLayout linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
+        AutoCompleteTextView autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
+        autoComplete.setTextSize(24);
 
         final EditText editTextKolicina = (EditText) findViewById(R.id.editTextKolicina);
 
@@ -80,6 +97,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         for(int i=0;i<elementiDirektorijuma.length-1;i++)
         {
             direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
+
         }
 
 
@@ -94,12 +112,12 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 Log.d(TAG,"ListView je prikazan");
 
                 Log.d(TAG,"MainActivity.proizvodi.get(0).getId().toString() = " + MainActivity.proizvodi.get(0).getId().toString());
-                Log.d(TAG,"textEditPretraga.getText().toString() = " + textEditPretraga.getText().toString());
+                Log.d(TAG,"textEditPretraga.getText().toString() = " + textEditPretraga.getQuery().toString());
 
-                if (textEditPretraga.getText().toString() != "") {
+                if (textEditPretraga.getQuery().toString() != "") {
                     boolean uspesnoPronadjenProizvod = false;
                     for (Proizvod p : MainActivity.proizvodi) {
-                        if (p.getId().equals(textEditPretraga.getText().toString())) {
+                        if (p.getId().equals(textEditPretraga.getQuery().toString())) {
                             tvIme.setVisibility(View.VISIBLE);
                             editTextKolicina.setVisibility(View.VISIBLE);
                             tvIme.setText(p.getIme());

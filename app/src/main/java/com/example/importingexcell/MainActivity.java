@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Odaberite Excel tabelu");
         setContentView(R.layout.activity_main);
 
 //        getActionBar().setTitle("Odaberite fajl");
