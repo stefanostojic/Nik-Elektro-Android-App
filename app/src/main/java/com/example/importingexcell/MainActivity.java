@@ -139,17 +139,27 @@ public class MainActivity extends AppCompatActivity {
                 Row row=sheet.getRow(r);
                 int cellsCount = row.getPhysicalNumberOfCells();
                 //celije krecu od 1 zbor jebenog plusa i cellCount -1 zbog zadnje prazne celije
-                for(int c=1;c<cellsCount-1;c++)
+                for(int c=1;c<cellsCount;c++)
                 {
-                    if(c==3 || c==4 )
+                    if (getCellAsString(row,6,formulaEvaluator).isEmpty())
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        String value = getCellAsString(row,c, formulaEvaluator);
-                        sb.append(value+"`");
-                    }
+                        if (c == 3 || c == 4 || c==6)
+                        {
+                            continue;
+                        } else {
+                            String value = getCellAsString(row, c, formulaEvaluator);
+                            sb.append(value + "`");
+                        }
+                    } else
+                        {
+                            if (c == 3 || c == 4 || c==5)
+                            {
+                                continue;
+                            } else {
+                                String value = getCellAsString(row, c, formulaEvaluator);
+                                sb.append(value + "`");
+                            }
+                        }
                 }
                 sb.append(";");
             }

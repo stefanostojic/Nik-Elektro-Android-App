@@ -50,8 +50,8 @@ import java.util.Calendar;
 
 public class Pretraga_Activity_V2 extends AppCompatActivity {
 
-
-
+    String[] elementiDirektorijuma= MainActivity.lastDirectory.split("/");
+    String direktorijum="";
      public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
 
@@ -60,7 +60,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pretraga_v2);
 
-        Button btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        final Button btnUpdate = (Button) findViewById(R.id.btnUpdate);
         final Button btnPretraga = (Button) findViewById(R.id.btnPretraga);
         final Context c = this.getBaseContext();
 
@@ -73,6 +73,13 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
         tvIme.setVisibility(View.INVISIBLE);
         editTextKolicina.setVisibility(View.INVISIBLE);
+
+        for(int i=0;i<elementiDirektorijuma.length-1;i++)
+        {
+            direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
+        }
+        
+
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,11 +126,17 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             public void onClick(View v) {
 
                 //cuvamo indeks iz liste
-                int brojReda= MainActivity.proizvodi.indexOf(pronadjeniProizvod)+1;
-                writeSheet(editTextKolicina.getText().toString(),brojReda);
-                pronadjeniProizvod.setKolicina(editTextKolicina.getText().toString());
-                toastMessage("Promena je sacuvana");
-                logovanje();
+                if(editTextKolicina.getText().toString().isEmpty())
+                {
+                    toastMessage("Polje za kolicinu je prazno.");
+                }
+                else {
+                    int brojReda = MainActivity.proizvodi.indexOf(pronadjeniProizvod) + 1;
+                    writeSheet(editTextKolicina.getText().toString(), brojReda);
+                    pronadjeniProizvod.setKolicina(editTextKolicina.getText().toString());
+                    toastMessage("Promena je sacuvana");
+                    logovanje();
+                }
             }
         });
 
@@ -163,8 +176,6 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     }
 
     private void logovanje(){
-        String[] elementiDirektorijuma = MainActivity.lastDirectory.split("/");
-        String direktorijum="";
 
         Calendar c = Calendar.getInstance();
         System.out.println("Current time => "+c.getTime());
@@ -175,13 +186,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
         // formattedDate have current date/time
 
-        for(int i=0;i<elementiDirektorijuma.length-1;i++)
-        {
-            direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
-        }
-        Log.d(TAG, direktorijum);
 
-        File file = new File(direktorijum,"logJebote.txt");
+        File file = new File(direktorijum,"logPromena.txt");
         if (!file.exists()) {
             try {
                 file.createNewFile();
