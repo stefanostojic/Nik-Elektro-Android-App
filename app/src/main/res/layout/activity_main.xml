@@ -6,44 +6,24 @@
     <RelativeLayout
         android:id="@+id/relLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
 
         <Button
             android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnUpDirectory"
-            android:text="Back"/>
+            android:text="Nazad"/>
 
         <Button
-            android:layout_marginRight="15dp"
+            android:id="@+id/btnViewSDCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnViewSDCard"
-            android:text="Memory"
-            android:layout_alignParentRight="true"/>
-
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-
-            <EditText
-                android:id="@+id/editTextID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Unesi ID proizvoda"
-                android:inputType="number" />
-
-            <Button
-                android:id="@+id/btnPretraga"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Pretraga" />
-        </LinearLayout>-->
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="Memorija" />
 
     </RelativeLayout>
 

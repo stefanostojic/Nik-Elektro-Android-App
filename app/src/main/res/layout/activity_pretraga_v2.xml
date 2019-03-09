@@ -7,36 +7,36 @@
     tools:context=".Pretraga_Activity_V2"
     android:orientation="vertical" >
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="100">
+
 
         <EditText
             android:id="@+id/etPretraga"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Unesite ID za pretragu"
+            android:layout_margin="8dp"
+            android:layout_weight="40"
+            android:hint="ID proizvoda"
             android:inputType="number"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/btnPretraga"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="60"
             android:text="Pretraga"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/etPretraga"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            android:textColor="@color/btnTextColor"
+            android:background="@color/colorPrimary"/>
+    </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -57,15 +57,15 @@
 
         <TextView
             android:id="@+id/tvIme"
-            android:layout_width="250dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
+            android:maxWidth="240dp"
             android:text="Naziv pronađenog proizvoda"
-            android:textSize="24sp"
             android:textStyle="bold"
-            app:autoSizeTextType="uniform"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -73,18 +73,20 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
-            android:layout_marginLeft="168dp"
-            android:text="Kolicina: "
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Količina: "
+            app:layout_constraintBottom_toTopOf="@+id/editTextKolicina"
+            app:layout_constraintStart_toStartOf="@+id/editTextKolicina"
+            app:layout_constraintTop_toTopOf="@+id/textView"
+            app:layout_constraintVertical_bias="1.0" />
 
         <EditText
             android:id="@+id/editTextKolicina"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:ems="10"
             android:gravity="center"
             android:hint="Nova kolicina"
@@ -92,7 +94,7 @@
             android:text="9999"
             android:textSize="30sp"
             android:visibility="visible"
-            app:layout_constraintStart_toEndOf="@+id/tvIme"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvIme" />
 
 
@@ -100,9 +102,17 @@
 
     <Button
         android:id="@+id/btnUpdate"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Sacuvaj" />
+        android:text="Sačuvaj"
+        android:textSize="18sp"
+        android:textColor="@color/btnTextColor"
+
+
+
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimary"
+        />
 
 
 </LinearLayout>

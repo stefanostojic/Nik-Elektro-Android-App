@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        getActionBar().setTitle("Odaberite fajl");
+
         verifyPermissions();
         lvInternalStorage=(ListView)findViewById(R.id.lvInternalStorage);
         btnUpDirectory=(Button)findViewById(R.id.btnUpDirectory);
