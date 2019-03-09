@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,6 +56,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
      public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         {
             direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
         }
-        
+
 
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
