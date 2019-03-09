@@ -87,6 +87,7 @@
             android:layout_marginLeft="24dp"
             android:ems="10"
             android:gravity="center"
+            android:hint="Nova kolicina"
             android:inputType="number"
             android:text="9999"
             android:textSize="30sp"
