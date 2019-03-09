@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,14 +39,20 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Pretraga_Activity_V2 extends AppCompatActivity {
 
 
 
+     public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
 
     @Override
@@ -65,6 +72,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         final TextView tvKolicina = (TextView) findViewById(R.id.tvKolicina);
 
         tvIme.setVisibility(View.INVISIBLE);
+        editTextKolicina.setVisibility(View.INVISIBLE);
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +86,15 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 Log.d(TAG,"MainActivity.proizvodi.get(0).getId().toString() = " + MainActivity.proizvodi.get(0).getId().toString());
                 Log.d(TAG,"textEditPretraga.getText().toString() = " + textEditPretraga.getText().toString());
 
-                Proizvod pronadjeniProizvod;
-
                 if (textEditPretraga.getText().toString() != "") {
                     boolean uspesnoPronadjenProizvod = false;
                     for (Proizvod p : MainActivity.proizvodi) {
                         if (p.getId().equals(textEditPretraga.getText().toString())) {
                             tvIme.setVisibility(View.VISIBLE);
+                            editTextKolicina.setVisibility(View.VISIBLE);
                             tvIme.setText(p.getIme());
                             editTextKolicina.setText(p.getKolicina());
+                            pronadjeniProizvod=p;
                             uspesnoPronadjenProizvod = true;
                             toastMessage("Proizvod je pronađen");
                             Log.d(TAG,"Proizvod je pronadjen");
@@ -97,7 +105,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                     if (!uspesnoPronadjenProizvod) {
                         toastMessage("Proizvod nije pronađen");
                         tvIme.setVisibility(View.INVISIBLE);
-                        tvKolicina.setVisibility(View.INVISIBLE);
+                        editTextKolicina.setVisibility(View.INVISIBLE);
                     }
                 }
                 else {
@@ -109,13 +117,19 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                writeSheet("stefan je u nirvani");
+
+                //cuvamo indeks iz liste
+                int brojReda= MainActivity.proizvodi.indexOf(pronadjeniProizvod)+1;
+                writeSheet(editTextKolicina.getText().toString(),brojReda);
+                pronadjeniProizvod.setKolicina(editTextKolicina.getText().toString());
+                toastMessage("Promena je sacuvana");
+                logovanje();
             }
         });
 
     }
 
-    public static void writeSheet(String data) {
+    public static void writeSheet(String data,int i) {
         HSSFWorkbook workbook;
 
         try {
@@ -130,10 +144,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             Log.d(TAG,"napravio workbook");
 
             //Row row = workbook.getSheetAt(0).createRow(0);
-            Cell cell = workbook.getSheetAt(0).getRow(3).getCell(6);
-            cell.setCellValue("4");
-            Cell cell2 = workbook.getSheetAt(0).getRow(4).getCell(6);
-            cell2.setCellValue(3);
+            Cell cell = workbook.getSheetAt(0).getRow(i).getCell(6);
+            cell.setCellValue(Integer.parseInt(data));
 
             file.close();
 
@@ -146,9 +158,48 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         }
     }
 
-
     private void toastMessage(String message) {
         Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+    }
+
+    private void logovanje(){
+        String[] elementiDirektorijuma = MainActivity.lastDirectory.split("/");
+        String direktorijum="";
+
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String formattedDate = df.format(c.getTime());
+        // formattedDate have current date/time
+
+        for(int i=0;i<elementiDirektorijuma.length-1;i++)
+        {
+            direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
+        }
+        Log.d(TAG, direktorijum);
+
+        File file = new File(direktorijum,"logJebote.txt");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            writer.append(formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ", Ime:" + pronadjeniProizvod.getIme() + ", Kolicina:" + pronadjeniProizvod.getKolicina() + "\n");
+            writer.close();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
