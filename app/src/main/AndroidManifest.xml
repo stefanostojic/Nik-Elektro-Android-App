@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".O_nama_activity"></activity>
-        <activity android:name=".Loading" />
+        <activity android:name=".Loading" android:noHistory="true" />
         <activity android:name=".Logo_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Pretraga_Activity_V2" />
+        <activity android:name=".Pretraga_Activity_V2" android:noHistory="true"/>
         <activity android:name=".Izmena_Activity" />
         <activity android:name=".Pretraga_Activity" />
         <activity android:name=".MainActivity" />

@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,7 +80,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pretraga_v2);
-        toastMessage("Podaci su ucitani bajo moj");
+        toastMessage("Podaci su ucitani");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 //        svPretraga.setQueryHint("ID proizvoda");
@@ -208,6 +209,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+
     }
 
     public class Upis extends AsyncTask<Integer,Integer,String>
@@ -298,6 +301,10 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
 
 

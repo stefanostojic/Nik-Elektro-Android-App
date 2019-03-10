@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             Intent intentUcitavanje = new Intent(getApplicationContext(), Loading.class);
             startActivity(intentUcitavanje);
+            finish();
         }
 
         @Override
