@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("Odaberite Excel tabelu");
         setContentView(R.layout.activity_main);
-
 //        getActionBar().setTitle("Odaberite fajl");
 
         verifyPermissions();
@@ -76,16 +75,21 @@ public class MainActivity extends AppCompatActivity {
                 if(lastDirectory.equals(adapterView.getItemAtPosition(i))){
                     Log.d(TAG, "lvInternalStorage: Selected a file for upload: " + lastDirectory);
                     //Execute method for reading the excel data.
-                    readExcelData(lastDirectory);
 
-                    Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+                    String[] nizLastDirectory = lastDirectory.split("\\.");
+                    
+                    if (nizLastDirectory[nizLastDirectory.length - 1].equals("xls")) {
+                        readExcelData(lastDirectory);
 
-                    toastMessage("Podaci su ucitani");
+                        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+                        toastMessage("Podaci su ucitani");
 
-                    Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
-                    intentPretraga.putExtra("filePath",lastDirectory);
-                    startActivity(intentPretraga);
-
+                        Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+                        intentPretraga.putExtra("filePath",lastDirectory);
+                        startActivity(intentPretraga);
+                    }
+                    else
+                        toastMessage("Fajl nije tabela");
                 }
                 else {
                     count++;
