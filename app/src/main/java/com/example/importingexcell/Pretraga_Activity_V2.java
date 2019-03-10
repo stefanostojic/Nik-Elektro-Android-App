@@ -17,16 +17,23 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 package com.example.importingexcell;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,6 +50,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,13 +63,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+
 public class Pretraga_Activity_V2 extends AppCompatActivity {
 
     String[] elementiDirektorijuma= MainActivity.lastDirectory.split("/");
     String direktorijum="";
     public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
-
+    public static File file;
 
    // SearchView svPretraga = (SearchView) findViewById(R.id.svPretraga);
 
@@ -70,9 +80,13 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pretraga_v2);
         toastMessage("Podaci su ucitani bajo moj");
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 //        svPretraga.setQueryHint("ID proizvoda");
 
+
+
+        //final Button btnLog = (Button) findViewById(R.id.btnLog);
         final Button btnUpdate = (Button) findViewById(R.id.btnUpdate);
         final Button btnPretraga = (Button) findViewById(R.id.btnPretraga);
         final Context c = this.getBaseContext();
@@ -163,7 +177,37 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 toastMessage("Promena je sacuvana");
             }
         });
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item1:
+                File fileLog= new File(direktorijum,"logPromena.txt");
+                Uri path = Uri.fromFile(fileLog);
+                Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+                pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pdfOpenintent.setDataAndType(path, "text/plain");
+                try {
+                    startActivity(pdfOpenintent);
+                }
+                catch (ActivityNotFoundException e) {
+
+                }
+                return true;
+            case R.id.item2:
+                showDIalog(getCurrentFocus());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public class Upis extends AsyncTask<Integer,Integer,String>
@@ -229,7 +273,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         // formattedDate have current date/time
 
 
-        File file = new File(direktorijum,"logPromena.txt");
+        file = new File(direktorijum,"logPromena.txt");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -249,5 +293,24 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    public void showDIalog(View view) {
+        ONamaDialog onamadialog = new ONamaDialog();
+        onamadialog.show(getSupportFragmentManager(),"O nama");
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

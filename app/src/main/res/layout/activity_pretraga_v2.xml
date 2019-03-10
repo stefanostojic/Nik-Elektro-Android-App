@@ -13,15 +13,7 @@
         android:weightSum="100">
 
 
-        <!--<EditText
-            android:id="@+id/etPretraga"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="40"
-            android:hint="ID proizvoda"
-            android:inputType="number"
-            android:textSize="24sp" />-->
+
 
         <SearchView
             android:id="@+id/etPretraga"
@@ -120,13 +112,9 @@
         android:text="Sačuvaj"
         android:textSize="18sp"
         android:textColor="@color/btnTextColor"
-
-
-
         android:layout_gravity="center_horizontal"
         android:background="@color/colorPrimary"
         />
-
 
 
 
