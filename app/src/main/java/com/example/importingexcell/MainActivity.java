@@ -3,6 +3,7 @@ package com.example.importingexcell;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] FileNameStrings;
     private File[] listFile;
     public static ArrayList<Proizvod> proizvodi = new ArrayList<Proizvod>();
+    public static boolean finished=false;
     File file;
 
     Button btnUpDirectory,btnSDCard;
@@ -77,16 +79,25 @@ public class MainActivity extends AppCompatActivity {
                     //Execute method for reading the excel data.
 
                     String[] nizLastDirectory = lastDirectory.split("\\.");
-                    
+
                     if (nizLastDirectory[nizLastDirectory.length - 1].equals("xls")) {
-                        readExcelData(lastDirectory);
 
-                        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
-                        toastMessage("Podaci su ucitani");
+                        readExcel readExcel = new readExcel();
 
-                        Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+                        readExcel.execute();
+
+                        toastMessage("Podaci se ucitavaju");
+
+
+
+//                        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
+                       // toastMessage("Podaci su ucitani");
+
+
+
+                        /*Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
                         intentPretraga.putExtra("filePath",lastDirectory);
-                        startActivity(intentPretraga);
+                        startActivity(intentPretraga);*/
                     }
                     else
                         toastMessage("Fajl nije tabela");
@@ -125,6 +136,30 @@ public class MainActivity extends AppCompatActivity {
                 checkInternalStorage();
             }
         });
+    }
+
+    public class readExcel extends AsyncTask
+    {
+        @Override
+        protected void onPreExecute() {
+            Intent intentUcitavanje = new Intent(getApplicationContext(), Loading.class);
+            startActivity(intentUcitavanje);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            readExcelData(lastDirectory);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            Log.d("logwtf","izasao je ");
+            Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+            startActivity(intentPretraga);
+            finish();
+        }
     }
 
     private void readExcelData(String filePath) {
@@ -170,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 sb.append(";");
             }
-
             parseStringBuilder(sb);
+            finished=true;
         }catch (FileNotFoundException e){
             //log
         }catch (IOException e){

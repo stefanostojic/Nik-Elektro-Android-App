@@ -107,7 +107,8 @@
             android:textSize="30sp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvIme" />
+            app:layout_constraintTop_toTopOf="@+id/tvIme"
+            android:selectAllOnFocus="true" />
 
 
     </android.support.constraint.ConstraintLayout>
