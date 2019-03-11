@@ -73,6 +73,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     public static Proizvod pronadjeniProizvod;
     private static final String TAG = "Pretraga_Activity123";
     public static File file;
+    public int proslaKolicina,novaKolicina;
 
    // SearchView svPretraga = (SearchView) findViewById(R.id.svPretraga);
 
@@ -173,7 +174,11 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 }
                 else {
                     Upis upis = new Upis();
-                    upis.execute(1,2,3);
+                    upis.execute();
+                    tvIme.setText("");
+                    editTextKolicina.setText("");
+                    textEditPretraga.setQuery("",false);
+
                 }
                 toastMessage("Promena je sacuvana");
             }
@@ -213,25 +218,34 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
     }
 
-    public class Upis extends AsyncTask<Integer,Integer,String>
+    public class Upis extends AsyncTask
     {
 
 
         @Override
-        protected String doInBackground(Integer... integers) {
+        protected String doInBackground(Object[] objects) {
 
-            EditText editTextKolicina1 = (EditText) findViewById(R.id.editTextKolicina);
-            int brojReda = MainActivity.proizvodi.indexOf(pronadjeniProizvod) + 1;
-            writeSheet(editTextKolicina1.getText().toString(), brojReda);
-            pronadjeniProizvod.setKolicina(editTextKolicina1.getText().toString());
 
-            logovanje();
+                EditText editTextKolicina1 = (EditText) findViewById(R.id.editTextKolicina);
+                int brojReda = MainActivity.proizvodi.indexOf(pronadjeniProizvod) + 1;
+                int staraKolicina= Integer.parseInt(pronadjeniProizvod.getKolicina());
+                int novaKolicina= Integer.parseInt(editTextKolicina1.getText().toString());
+                pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
+                writeSheet(pronadjeniProizvod.getKolicina(),brojReda);
+
+
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            logovanje();
+
+        }
     }
 
-    public static void writeSheet(String data,int i) {
+    public static void writeSheet(String data, int i) {
         HSSFWorkbook workbook;
 
         try {
@@ -247,7 +261,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
             //Row row = workbook.getSheetAt(0).createRow(0);
             Cell cell = workbook.getSheetAt(0).getRow(i).getCell(6);
-            cell.setCellValue(Integer.parseInt(data));
+            cell.setCellValue(data);
 
             file.close();
 
@@ -300,6 +314,11 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         ONamaDialog onamadialog = new ONamaDialog();
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
+
+   /* public int stringToInt (String s)
+    {
+
+    }*/
 
     @Override
     public void onBackPressed() {

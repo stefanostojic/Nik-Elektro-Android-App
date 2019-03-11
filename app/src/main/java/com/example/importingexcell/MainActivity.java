@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Proizvod> proizvodi = new ArrayList<Proizvod>();
     public static boolean finished=false;
     File file;
+    public int j=0;
 
     Button btnUpDirectory,btnSDCard;
 
@@ -190,8 +192,14 @@ public class MainActivity extends AppCompatActivity {
                         {
                             continue;
                         } else {
-                            String value = getCellAsString(row, c, formulaEvaluator);
-                            sb.append(value + "`");
+                            if(c==5)
+                            {
+                               sb.append(0+"`");
+                            }
+                            else {
+                                String value = getCellAsString(row, c, formulaEvaluator);
+                                sb.append(value + "`");
+                            }
                         }
                     } else
                         {
@@ -260,7 +268,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkInternalStorage(){
-        try {
+        File f = new File("sdcard/Download");
+        File[] jpgfiles = f.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file)
+            {
+                return (file.getPath().endsWith(".xls"));
+            }
+        });
+
+        FilePathStrings= new String[jpgfiles.length];
+        FileNameStrings= new String[jpgfiles.length];
+
+        for(int i=0;i< jpgfiles.length;i++)
+        {
+            FilePathStrings[i]=jpgfiles[i].getPath();
+            FileNameStrings[i]=jpgfiles[i].getName();
+
+        }
+
+       /* try {
             if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 toastMessage("Nemate SD karticu!");
             }
@@ -272,16 +299,25 @@ public class MainActivity extends AppCompatActivity {
             FileNameStrings= new String[listFile.length];
             for(int i=0;i< listFile.length;i++)
             {
-                FilePathStrings[i]=listFile[i].getPath();
-                FileNameStrings[i]=listFile[i].getName();
-            }
+                *//*FilePathStrings[i]=listFile[i].getPath();
+                FileNameStrings[i]=listFile[i].getName();*//*
+                Log.d(TAG,listFile[i].getName());
+                Log.d(TAG,getFilesExt(listFile[i].getName()));
+                if(getFilesExt(listFile[i].getName())=="xls")
+                {
+                    Log.d(TAG,"usao u if");
+                    FilePathStrings[j]=listFile[i].getPath();
+                    FileNameStrings[j]=listFile[i].getName();
+                    j++;
+                }
+            }*/
             ArrayAdapter<String> adapter= new ArrayAdapter<String>
                     (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
             lvInternalStorage.setAdapter(adapter);
 
-        }catch(NullPointerException e){
+       /* }catch(NullPointerException e){
 
-        }
+        }*/
 
     }
 
@@ -302,5 +338,10 @@ public class MainActivity extends AppCompatActivity {
                     1
             );
         }
+    }
+
+    public static String getFilesExt(String fileName)
+    {
+        return fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
     }
 }
