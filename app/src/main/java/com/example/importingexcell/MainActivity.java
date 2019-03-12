@@ -38,7 +38,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivityTag";
 
     private String[] FilePathStrings;
     private String[] FileNameStrings;
@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 lastDirectory = pathHistory.get(count);
-                if(lastDirectory.equals(adapterView.getItemAtPosition(i))){
+
+                if(lastDirectory.equals(adapterView.getItemAtPosition(i))/* || */){
                     Log.d(TAG, "lvInternalStorage: Selected a file for upload: " + lastDirectory);
                     //Execute method for reading the excel data.
 
@@ -88,18 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                         readExcel.execute();
 
-                        toastMessage("Podaci se ucitavaju");
-
-
-
-//                        Log.d(TAG, "ovo je IME: "+proizvodi.get(1).getIme());
-                       // toastMessage("Podaci su ucitani");
-
-
-
-                        /*Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
-                        intentPretraga.putExtra("filePath",lastDirectory);
-                        startActivity(intentPretraga);*/
+                        toastMessage("Podaci se učitavaju");
                     }
                     else
                         toastMessage("Fajl nije tabela");
@@ -269,21 +259,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkInternalStorage(){
         File f = new File("sdcard/Download");
-        File[] jpgfiles = f.listFiles(new FileFilter() {
+        Log.d(TAG, "checkInternalStorage: " + pathHistory.get(count));
+//        File f = new File(pathHistory.get(count));
+        File[] xlsFiles = f.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file)
             {
+                /*if (file.getPath().endsWith(".xls") || file.isDirectory())
+                    return true;
+                else
+                    return false;*/
                 return (file.getPath().endsWith(".xls"));
             }
         });
 
-        FilePathStrings= new String[jpgfiles.length];
-        FileNameStrings= new String[jpgfiles.length];
+        Log.d(TAG, "xlsFiles.length: " + xlsFiles.length);
 
-        for(int i=0;i< jpgfiles.length;i++)
+        FilePathStrings= new String[xlsFiles.length];
+        FileNameStrings= new String[xlsFiles.length];
+
+        for(int i=0;i< xlsFiles.length;i++)
         {
-            FilePathStrings[i]=jpgfiles[i].getPath();
-            FileNameStrings[i]=jpgfiles[i].getName();
+            FilePathStrings[i]=xlsFiles[i].getPath();
+            FileNameStrings[i]=xlsFiles[i].getName();
 
         }
 
@@ -326,8 +324,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verifyPermissions(){
-
-        //int permissionCallPhone = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE);
 
         int permissionExternalMemory = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 

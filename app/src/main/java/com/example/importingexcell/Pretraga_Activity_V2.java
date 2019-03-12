@@ -16,10 +16,14 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
 package com.example.importingexcell;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -81,47 +85,34 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pretraga_v2);
-        toastMessage("Podaci su ucitani");
+        toastMessage("Podaci su učitani");
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-//        svPretraga.setQueryHint("ID proizvoda");
 
-
-
-        //final Button btnLog = (Button) findViewById(R.id.btnLog);
         final Button btnUpdate = (Button) findViewById(R.id.btnUpdate);
         final Button btnPretraga = (Button) findViewById(R.id.btnPretraga);
-        final Context c = this.getBaseContext();
+        final TextView tvIme = (TextView) findViewById(R.id.tvIme);
+        final SearchView searchViewPretraga = (SearchView) findViewById(R.id.etPretraga); // prethodno: editTextPretraga, takođe, sad se umesto getText() piše getQuery()
+        final EditText editTextUvecajZa = (EditText) findViewById(R.id.editTextUvecajZa);
+        final EditText editTextTrenutnaKolicina = (EditText) findViewById(R.id.editTextTrenutnaKolicina);
 
-        final SearchView textEditPretraga = (SearchView) findViewById(R.id.etPretraga);
-        final EditText editTextKolicina = (EditText) findViewById(R.id.editTextKolicina);
-//        ((TextView) textEditPretraga).setTextSize(24);
-
-        /*TextView searchText = (TextView) textEditPretraga.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchText.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);*/
-
-
-        LinearLayout linearLayout1 = (LinearLayout) textEditPretraga.getChildAt(0);
+        //postavlja veličinu teksta polja za pretragu
+        LinearLayout linearLayout1 = (LinearLayout) searchViewPretraga.getChildAt(0);
         LinearLayout linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
         LinearLayout linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
         AutoCompleteTextView autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
         autoComplete.setTextSize(24);
 
-
-
-        final TextView tvIme = (TextView) findViewById(R.id.tvIme);
-        final TextView tvKolicina = (TextView) findViewById(R.id.tvKolicina);
-
+        //sakriva polja o pronađenom proizvodu pri prvom paljenju aplikacije
         tvIme.setVisibility(View.INVISIBLE);
-        editTextKolicina.setVisibility(View.INVISIBLE);
+        editTextUvecajZa.setVisibility(View.INVISIBLE);
+        editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
 
-        for(int i=0;i<elementiDirektorijuma.length-1;i++)
+        for(int i = 0; i < elementiDirektorijuma.length - 1; i++)
         {
-            direktorijum=direktorijum+elementiDirektorijuma[i]+"/";
+            direktorijum = direktorijum + elementiDirektorijuma[i] + "/";
 
         }
-
-
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,17 +123,17 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
                 Log.d(TAG,"ListView je prikazan");
 
-//                Log.d(TAG,"MainActivity.proizvodi.get(0).getId().toString() = " + MainActivity.proizvodi.get(0).getId().toString());
-  //              Log.d(TAG,"textEditPretraga.getText().toString() = " + textEditPretraga.getQuery().toString());
-
-                if (textEditPretraga.getQuery().toString() != "") {
+                if (searchViewPretraga.getQuery().toString() != "") {
                     boolean uspesnoPronadjenProizvod = false;
                     for (Proizvod p : MainActivity.proizvodi) {
-                        if (p.getId().equals(textEditPretraga.getQuery().toString())) {
+                        if (p.getId().equals(searchViewPretraga.getQuery().toString())) {
                             tvIme.setVisibility(View.VISIBLE);
-                            editTextKolicina.setVisibility(View.VISIBLE);
+                            editTextUvecajZa.setVisibility(View.VISIBLE);
+                            editTextTrenutnaKolicina.setVisibility(View.VISIBLE);
+                            editTextUvecajZa.requestFocus();
                             tvIme.setText(p.getIme());
-                            editTextKolicina.setText(p.getKolicina());
+                            /*editTextUvecajZa.setText(p.getKolicina());*/
+                            editTextTrenutnaKolicina.setText(p.getKolicina());
                             pronadjeniProizvod=p;
                             uspesnoPronadjenProizvod = true;
                             toastMessage("Proizvod je pronađen");
@@ -154,7 +145,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                     if (!uspesnoPronadjenProizvod) {
                         toastMessage("Proizvod nije pronađen");
                         tvIme.setVisibility(View.INVISIBLE);
-                        editTextKolicina.setVisibility(View.INVISIBLE);
+                        editTextUvecajZa.setVisibility(View.INVISIBLE);
+                        editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
                     }
                 }
                 else {
@@ -168,21 +160,67 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             public void onClick(View v) {
 
                 //cuvamo indeks iz liste
-                if(editTextKolicina.getText().toString().isEmpty())
+                if(editTextUvecajZa.getText().toString().isEmpty())
                 {
-                    toastMessage("Polje za kolicinu je prazno.");
+                    toastMessage("Polje za količinu je prazno");
                 }
-                else {
+                else if (editTextUvecajZa.getText().toString() == pronadjeniProizvod.getKolicina())
+                {
+                    toastMessage("Polje za količinu je nepromenjeno");
+                }
+                else if(editTextTrenutnaKolicina.getText().toString().isEmpty())
+                {
+                    toastMessage("Proizvod nije odabran");
+                }
+                else
+                {
                     Upis upis = new Upis();
                     upis.execute();
-                    tvIme.setText("");
-                    editTextKolicina.setText("");
-                    textEditPretraga.setQuery("",false);
 
+
+                    toastMessage("Promena je sačuvana");
+
+
+                    searchViewPretraga.requestFocus();
+
+                    int uvecajOd = Integer.parseInt(editTextTrenutnaKolicina.getText().toString());
+                    int uvecajDo = uvecajOd + Integer.parseInt(editTextUvecajZa.getText().toString());
+                    editTextUvecajZa.setText("");
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            editTextTrenutnaKolicina.setTypeface(null, Typeface.NORMAL);
+                            searchViewPretraga.setQuery("",false);
+                            tvIme.setVisibility(View.INVISIBLE);
+                            editTextUvecajZa.setVisibility(View.INVISIBLE);
+                            editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
+                        }
+                    }, 3000);
+
+                    animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));
                 }
-                toastMessage("Promena je sacuvana");
             }
         });
+    }
+
+    public void animateEditText(int uvecajOd, int uvecajDo, final EditText editText) {
+        
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(uvecajOd, uvecajDo);
+        valueAnimator.setDuration(1250);
+
+        editText.setTypeface(null, Typeface.BOLD);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+
+                editText.setText(valueAnimator.getAnimatedValue().toString());
+
+            }
+        });
+
+        valueAnimator.start();
     }
 
     @Override
@@ -209,7 +247,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 }
                 return true;
             case R.id.item2:
-                showDIalog(getCurrentFocus());
+                showDialog(getCurrentFocus());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -218,22 +256,17 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
     }
 
-    public class Upis extends AsyncTask
-    {
-
+    public class Upis extends AsyncTask {
 
         @Override
         protected String doInBackground(Object[] objects) {
 
-
-                EditText editTextKolicina1 = (EditText) findViewById(R.id.editTextKolicina);
+                EditText editTextUvecajZa1 = (EditText) findViewById(R.id.editTextUvecajZa);
                 int brojReda = MainActivity.proizvodi.indexOf(pronadjeniProizvod) + 1;
                 int staraKolicina= Integer.parseInt(pronadjeniProizvod.getKolicina());
-                int novaKolicina= Integer.parseInt(editTextKolicina1.getText().toString());
+                int novaKolicina= Integer.parseInt(editTextUvecajZa1.getText().toString());
                 pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
                 writeSheet(pronadjeniProizvod.getKolicina(),brojReda);
-
-
 
             return null;
         }
@@ -241,7 +274,6 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             logovanje();
-
         }
     }
 
@@ -275,7 +307,7 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     }
 
     private void toastMessage(String message) {
-        Toast.makeText(this,message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }
 
     private void logovanje(){
@@ -310,20 +342,16 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void showDIalog(View view) {
+
+    public void showDialog(View view) {
         ONamaDialog onamadialog = new ONamaDialog();
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
 
-   /* public int stringToInt (String s)
-    {
-
-    }*/
-
-    @Override
+    /*@Override
     public void onBackPressed() {
         finish();
-    }
+    }*/
 }
 
 

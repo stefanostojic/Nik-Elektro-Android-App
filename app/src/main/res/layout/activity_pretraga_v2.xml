@@ -44,63 +44,87 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="Ime proizvoda: "
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/tvIme"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvIme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginLeft="14dp"
             android:layout_marginTop="8dp"
             android:maxWidth="220dp"
             android:text="Naziv pronađenog proizvoda"
-            android:textStyle="bold"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="111dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Količina: "
-            app:layout_constraintBottom_toTopOf="@+id/editTextKolicina"
-            app:layout_constraintStart_toStartOf="@+id/editTextKolicina"
-            app:layout_constraintTop_toTopOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0" />
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Trenutna količina:"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editTextKolicina"
-            android:layout_width="100dp"
+            android:id="@+id/editTextUvecajZa"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="Nova kolicina"
+            android:hint="Uvećaj za"
             android:inputType="number"
-            android:text="9999"
-            android:textSize="30sp"
+            android:selectAllOnFocus="true"
+            android:text=""
+            android:textSize="24sp"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvIme"
-            android:selectAllOnFocus="true" />
+            app:layout_constraintEnd_toEndOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Uvećaj za: "
+            app:layout_constraintEnd_toEndOf="@+id/editTextTrenutnaKolicina"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/editTextTrenutnaKolicina"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTrenutnaKolicina" />
+
+        <EditText
+            android:id="@+id/editTextTrenutnaKolicina"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:gravity="center"
+            android:editable="false"
+            android:focusable="false"
+            android:inputType="none"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 
     </android.support.constraint.ConstraintLayout>
@@ -115,7 +139,6 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/colorPrimary"
         />
-
 
 
 </LinearLayout>
