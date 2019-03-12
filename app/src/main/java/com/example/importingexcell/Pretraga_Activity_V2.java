@@ -246,9 +246,12 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
 
                 }
                 return true;
-            case R.id.item2:
+            case R.id.item3:
                 showDialog(getCurrentFocus());
                 return true;
+            case R.id.item2:
+                Intent intentListaSvihProizvoda = new Intent(getApplicationContext(), Pretraga_Activity.class);
+                startActivity(intentListaSvihProizvoda);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -13,14 +13,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="100">
+
+
 
 
             <EditText
                 android:id="@+id/editTextID"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="33.3"
                 android:ems="10"
                 android:hint="Unesi ID proizvoda"
                 android:inputType="number"
@@ -29,13 +32,19 @@
 
             <Button
                 android:id="@+id/btnPretraga"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="66.6"
                 android:text="Pretraga"
                 android:textSize="18sp" />
         </LinearLayout>
 
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="60dp"
+            android:background="?android:attr/listDivider" />
     </RelativeLayout>
 
 
@@ -51,6 +60,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relLayout"></ListView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
 
 </RelativeLayout>

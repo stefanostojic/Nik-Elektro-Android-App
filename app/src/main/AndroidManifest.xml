@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Pretraga_Activity_V2" android:noHistory="true"/>
+        <activity android:name=".Pretraga_Activity_V2" />
         <activity android:name=".Izmena_Activity" />
         <activity android:name=".Pretraga_Activity" />
         <activity android:name=".MainActivity" />

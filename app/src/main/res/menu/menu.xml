@@ -6,6 +6,9 @@
         android:title="Log promena"
         yourapp:showAsAction="never" />
     <item android:id="@+id/item2"
+        android:title="Lista svih proizvoda"
+        yourapp:showAsAction="never" />
+    <item android:id="@+id/item3"
         android:title="O nama"
         yourapp:showAsAction="never" />
 </menu>
