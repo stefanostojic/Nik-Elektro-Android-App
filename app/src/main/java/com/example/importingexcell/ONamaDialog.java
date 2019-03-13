@@ -2,6 +2,8 @@ package com.example.importingexcell;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -29,7 +31,13 @@ public class ONamaDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.o_nama_layout,null));
 //        builder.setPositiveButton("Zatvori")
+
         return builder.create();
+
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
 
     }
 

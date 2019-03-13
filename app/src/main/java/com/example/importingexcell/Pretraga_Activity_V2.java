@@ -24,6 +24,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -78,6 +79,8 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
     private static final String TAG = "Pretraga_Activity123";
     public static File file;
     public int proslaKolicina,novaKolicina;
+    public static MediaPlayer mp;
+
 
    // SearchView svPretraga = (SearchView) findViewById(R.id.svPretraga);
 
@@ -248,10 +251,12 @@ public class Pretraga_Activity_V2 extends AppCompatActivity {
                 return true;
             case R.id.item3:
                 showDialog(getCurrentFocus());
+                /*MediaPlayer mp = MediaPlayer.create(this, R.raw.brochant);
+                mp.start();*/
                 return true;
-            case R.id.item2:
+            /*case R.id.item2:
                 Intent intentListaSvihProizvoda = new Intent(getApplicationContext(), Pretraga_Activity.class);
-                startActivity(intentListaSvihProizvoda);
+                startActivity(intentListaSvihProizvoda);*/
             default:
                 return super.onOptionsItemSelected(item);
         }
