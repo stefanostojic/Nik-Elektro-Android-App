@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -32,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     {
         @Override
         protected void onPreExecute() {
-            Intent intentUcitavanje = new Intent(getApplicationContext(), Loading.class);
+            Intent intentUcitavanje = new Intent(getApplicationContext(), Loading_Activity.class);
             startActivity(intentUcitavanje);
             finish();
         }
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             Log.d("logwtf","izasao je ");
-            Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+            Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
             startActivity(intentPretraga);
             finish();
         }

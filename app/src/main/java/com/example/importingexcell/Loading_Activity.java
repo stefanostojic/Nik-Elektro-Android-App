@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class Loading extends AppCompatActivity {
+public class Loading_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +21,13 @@ public class Loading extends AppCompatActivity {
             public void run() {
 
                 Log.d("logwtf","izasao je ");
-                Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+                Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
                 startActivity(intentPretraga);
                 finish();
             }
         }, 4000);*/
         /*Log.d("logwtf","izasao iz while-a");
-        Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity_V2.class);
+        Intent intentPretraga = new Intent(getApplicationContext(), Pretraga_Activity.class);
         startActivity(intentPretraga);
         finish();
 */

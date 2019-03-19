@@ -24,7 +24,7 @@ public class ONamaDialog extends DialogFragment {
     public Dialog onCreateDialog (Bundle savedInstanceState) {
 
 
-//        Pretraga_Activity_V2..setMovementMethod(new ScrollingMovementMethod());
+//        Pretraga_Activity..setMovementMethod(new ScrollingMovementMethod());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
