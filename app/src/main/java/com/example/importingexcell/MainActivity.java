@@ -125,7 +125,17 @@ public class MainActivity extends AppCompatActivity {
                 pathHistory = new ArrayList<String>();
                 pathHistory.add(count,System.getenv("EXTERNAL_STORAGE"));
                 Log.d(TAG, "btnSDCard: " + pathHistory.get(count));
-                checkInternalStorage();
+                //checkInternalStorage();
+
+                ArrayList<File> files = findExcell(Environment.getExternalStorageDirectory());
+                FilePathStrings= new String[files.size()];
+                for(int i=0;i<files.size()-1;i++)
+                    FilePathStrings[i]=files.get(i).getPath();
+
+                ArrayAdapter<String> adapter= new ArrayAdapter<String>
+                        (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
+                lvInternalStorage.setAdapter(adapter);
+
             }
         });
     }
@@ -258,17 +268,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkInternalStorage(){
-        File f = new File("sdcard/Download");
+
+
+        /*File f = new File("sdcard/Download");
         Log.d(TAG, "checkInternalStorage: " + pathHistory.get(count));
 //        File f = new File(pathHistory.get(count));
         File[] xlsFiles = f.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file)
             {
-                /*if (file.getPath().endsWith(".xls") || file.isDirectory())
+                *//*if (file.getPath().endsWith(".xls") || file.isDirectory())
                     return true;
                 else
-                    return false;*/
+                    return false;*//*
                 return (file.getPath().endsWith(".xls"));
             }
         });
@@ -283,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             FilePathStrings[i]=xlsFiles[i].getPath();
             FileNameStrings[i]=xlsFiles[i].getName();
 
-        }
+        }*/
 
        /* try {
             if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -309,10 +321,10 @@ public class MainActivity extends AppCompatActivity {
                     j++;
                 }
             }*/
-            ArrayAdapter<String> adapter= new ArrayAdapter<String>
+            /*ArrayAdapter<String> adapter= new ArrayAdapter<String>
                     (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
             lvInternalStorage.setAdapter(adapter);
-
+*/
        /* }catch(NullPointerException e){
 
         }*/
@@ -340,4 +352,29 @@ public class MainActivity extends AppCompatActivity {
     {
         return fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
     }
+
+    public ArrayList<File> findExcell(File f)
+    {
+
+        ArrayList<File> fileList = new ArrayList<File>();
+        listFile = f.listFiles();
+        for(File file: listFile)
+        {
+            if(file.isDirectory() && !file.isHidden())
+            {
+                fileList.addAll(findExcell(file));
+            }
+            else
+            {
+                if(file.getName().endsWith(".xls"))
+                {
+                    fileList.add(file);
+                }
+            }
+
+        }
+        return fileList;
+
+    }
+
 }
