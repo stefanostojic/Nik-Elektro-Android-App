@@ -470,13 +470,14 @@ public class Pretraga_Activity extends AppCompatActivity {
             }
             reader.close();
             listaPromena.clear();
-            for(int i =0;i<3;i++)
-            {
-                promena= listaLinija.get(i);
-                niz=promena.split(":");
 
+            int counter = 0;
+            for (String linija1: listaLinija) {
+                if (counter == 3)
+                    break;
+                niz = linija1.split(":");
                 listaPromena.add(niz[4]+" : "+niz[6]+" : "+niz[8]);
-
+                counter++;
             }
 
 
