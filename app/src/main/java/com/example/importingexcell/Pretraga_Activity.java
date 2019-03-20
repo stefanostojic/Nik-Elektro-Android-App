@@ -55,17 +55,23 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.stream.Stream;
 
 
 public class Pretraga_Activity extends AppCompatActivity {
@@ -77,8 +83,9 @@ public class Pretraga_Activity extends AppCompatActivity {
     public static File file;
     public int proslaKolicina,novaKolicina;
     public static MediaPlayer mp;
+    public static int novaKolicinaZaLogovanje;
 
-
+    public ArrayList<String> listaPromena= new ArrayList<String>();
    // SearchView svPretraga = (SearchView) findViewById(R.id.svPretraga);
 
     @Override
@@ -94,6 +101,8 @@ public class Pretraga_Activity extends AppCompatActivity {
         final TextView tvIme = (TextView) findViewById(R.id.tvIme);
         final SearchView searchViewPretraga = (SearchView) findViewById(R.id.etPretraga); // prethodno: editTextPretraga, takođe, sad se umesto getText() piše getQuery()
         final EditText editTextUvecajZa = (EditText) findViewById(R.id.editTextUvecajZa);
+        final ListView listViewPrethodneIzmene = (ListView) findViewById(R.id.listViewPrethodneIzmene);
+        listViewPrethodneIzmene.setVisibility(View.VISIBLE);
         final EditText editTextTrenutnaKolicina = (EditText) findViewById(R.id.editTextTrenutnaKolicina);
 
         //postavlja veličinu teksta polja za pretragu
@@ -113,6 +122,10 @@ public class Pretraga_Activity extends AppCompatActivity {
             direktorijum = direktorijum + elementiDirektorijuma[i] + "/";
 
         }
+
+        promene();
+
+
 
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +165,9 @@ public class Pretraga_Activity extends AppCompatActivity {
                 else {
                     toastMessage("Niste uneli ID za pretragu");
                 }
+
+
+
             }
         });
 
@@ -278,8 +294,12 @@ public class Pretraga_Activity extends AppCompatActivity {
                 int brojReda = MainActivity.proizvodi.indexOf(pronadjeniProizvod) + 1;
                 int staraKolicina= Integer.parseInt(pronadjeniProizvod.getKolicina());
                 int novaKolicina= Integer.parseInt(editTextUvecajZa1.getText().toString());
-                pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
-                writeSheet(pronadjeniProizvod.getKolicina(),brojReda);
+            novaKolicinaZaLogovanje=novaKolicina;
+
+            pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
+                pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje()+"+"+novaKolicina);
+                writeSheet(pronadjeniProizvod.getKolicina(),pronadjeniProizvod.getSabiranje(),brojReda);
+
 
             return null;
         }
@@ -287,10 +307,11 @@ public class Pretraga_Activity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             logovanje();
+            promene();
         }
     }
 
-    public static void writeSheet(String data, int i) {
+    public static void writeSheet(String data,String data2, int i) {
         HSSFWorkbook workbook;
 
         try {
@@ -307,6 +328,8 @@ public class Pretraga_Activity extends AppCompatActivity {
             //Row row = workbook.getSheetAt(0).createRow(0);
             Cell cell = workbook.getSheetAt(0).getRow(i).getCell(6);
             cell.setCellValue(data);
+            Cell cell2 = workbook.getSheetAt(0).getRow(i).getCell(7);
+            cell2.setCellValue(data2);
 
             file.close();
 
@@ -344,11 +367,19 @@ public class Pretraga_Activity extends AppCompatActivity {
             }
         }
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+           /* FileOutputStream fileOutputStream = new FileOutputStream(file,true);
             OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
             writer.append(formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ", Ime:" + pronadjeniProizvod.getIme() + ", Kolicina:" + pronadjeniProizvod.getKolicina() + "\n");
             writer.close();
-            fileOutputStream.close();
+            fileOutputStream.close();*/
+            RandomAccessFile f = new RandomAccessFile(file,"rw");
+            f.seek(file.length());
+            Log.d("kurac", "nova kolicina kurac"+ novaKolicinaZaLogovanje);
+            f.write((formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ":, Ime:" + pronadjeniProizvod.getIme() + ":, Kolicina:" + (Integer.parseInt(pronadjeniProizvod.getKolicina())-novaKolicinaZaLogovanje) + "->"+pronadjeniProizvod.getKolicina()+ "\n").getBytes());
+            f.close();
+
+
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -361,6 +392,64 @@ public class Pretraga_Activity extends AppCompatActivity {
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
 
+
+    public void promene()
+    {
+        try {
+           /* FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            writer.append(formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ", Ime:" + pronadjeniProizvod.getIme() + ", Kolicina:" + pronadjeniProizvod.getKolicina() + "\n");
+            writer.close();
+            fileOutputStream.close();*/
+           String promena;
+           String [] niz;
+            file = new File(direktorijum,"logPromena.txt");
+            FileInputStream fs= new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            for(int i = 0; i < file.length(); ++i)
+                br.readLine();
+            String lineIWant = br.readLine();
+
+
+            BufferedReader reader = new BufferedReader(new FileReader("file.txt"));
+            int lines = 0;
+            String linija = "";
+            ArrayList<String> listaLinija = new ArrayList<String>();
+            while ((linija = reader.readLine()) != null)
+                listaLinija.add(0, linija);
+            reader.close();
+
+            listaLinija.subList(0, 3);
+
+            /*for (String s: listaLinija) {
+
+            }*/
+
+           /* RandomAccessFile f = new RandomAccessFile(file,"rw");
+            f.seek(file.length()-10);
+            String promena;
+            String[] niz;
+            for(int i =0;i<3;i++)
+            {
+                Log.d("kurac2", "promene: "+f.readLine());
+                promena= f.readLine();
+                niz=promena.split(":");
+
+                listaPromena.add(niz[4]+" "+niz[6]+" "+niz[8]);
+
+            }*/
+            final ListView listViewPrethodneIzmene = (ListView) findViewById(R.id.listViewPrethodneIzmene);
+
+            PrethodneIzmene_ListAdapter_v2 adapter = new PrethodneIzmene_ListAdapter_v2(this, R.layout.prethodneizmene_listadapter_layout_v2, (ArrayList<String>) listaLinija.subList(0, 3));
+            listViewPrethodneIzmene.setAdapter(adapter);
+            Log.d("kurac", "nova kolicina kurac"+ novaKolicinaZaLogovanje);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /*@Override
     public void onBackPressed() {
         finish();

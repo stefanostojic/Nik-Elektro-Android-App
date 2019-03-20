@@ -170,36 +170,83 @@ public class MainActivity extends AppCompatActivity {
                 Row row=sheet.getRow(r);
                 int cellsCount = row.getPhysicalNumberOfCells();
                 //celije krecu od 1 zbor jebenog plusa i cellCount -1 zbog zadnje prazne celije
-                for(int c=1;c<cellsCount;c++)
+                Log.d("kurac", "cellsCOunt"+cellsCount);
+
+                for(int c=1;c<=cellsCount;c++)
                 {
-                    if (getCellAsString(row,6,formulaEvaluator).isEmpty())
+                    switch(c)
                     {
-                        if (c == 3 || c == 4 || c==6)
+                        case 1:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 2:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 5:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 6:
+                            if(getCellAsString(row,c,formulaEvaluator).isEmpty())
+                                sb.append(0+"`");
+                            else
+                                sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 7:
+                            if(getCellAsString(row,c,formulaEvaluator).isEmpty())
+                                sb.append(0+"`");
+                            else
+                                sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        default:
+                            break;
+
+
+                    }
+
+
+                    /*if (getCellAsString(row,6,formulaEvaluator).isEmpty())
+                    {
+                        if (c == 3 || c == 4)
                         {
                             continue;
                         } else {
-                            if(c==5)
+                            if(c==6)
                             {
                                sb.append(0+"`");
+                            }
+                            else if(getCellAsString(row,7,formulaEvaluator).isEmpty()&& c==7)
+                            {
+                                sb.append(0+"`");
+                                Log.d("kurac", "USAO ");
+                            }
+
+                            else {
+                                String value = getCellAsString(row, c, formulaEvaluator);
+                                sb.append(value + "`");
+                                if(c==7)
+                                    Log.d(TAG, "vrednost "+value);
+                            }
+                        }
+                    }
+                    else
+                        {
+                            if (c == 3 || c == 4)
+                            {
+                                continue;
+                            }
+                             else if(getCellAsString(row,7,formulaEvaluator).isEmpty()&& c==7)
+                            {
+                                sb.append(0+"`");
                             }
                             else {
                                 String value = getCellAsString(row, c, formulaEvaluator);
                                 sb.append(value + "`");
                             }
-                        }
-                    } else
-                        {
-                            if (c == 3 || c == 4 || c==5)
-                            {
-                                continue;
-                            } else {
-                                String value = getCellAsString(row, c, formulaEvaluator);
-                                sb.append(value + "`");
-                            }
-                        }
+                        }*/
                 }
                 sb.append(";");
             }
+            Log.d("kurac", "sb vrednost: "+sb);
             parseStringBuilder(sb);
             finished=true;
         }catch (FileNotFoundException e){
@@ -216,11 +263,16 @@ public class MainActivity extends AppCompatActivity {
         {
             String[] column= rows[i].split("`");
             String id= column[0];
-            String kolicina = column[2];
-            String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
-            Log.d(TAG, "data from row"+cellInfo);
+            String naziv= column[1];
+            String staraKolicina = column[2];
+            String popisanaKolicina = column[3];
+            Log.d("kurac", "sabiranje"+column[4]);
+           String sabiranje = column[4];
+           // String sabiranje="idiot";
+          //  String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
+           // Log.d(TAG, "data from row"+cellInfo);
 
-            proizvodi.add(new Proizvod(id,column[1],kolicina));
+            proizvodi.add(new Proizvod(id,naziv,popisanaKolicina,sabiranje,staraKolicina));
         }
 
         /*TextView tw = (TextView) findViewById(R.id.textView);
