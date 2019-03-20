@@ -134,14 +134,11 @@ public class Pretraga_Activity extends AppCompatActivity {
 
         promene();
 
-
-
         btnPretraga.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Log.d(TAG,"Dugme \"Pretraga\" je kliknuto");
-
 
                 Log.d(TAG,"ListView je prikazan");
 
@@ -180,8 +177,6 @@ public class Pretraga_Activity extends AppCompatActivity {
                     toastMessage("Niste uneli ID za pretragu");
                 }
 
-
-
             }
         });
 
@@ -214,9 +209,7 @@ public class Pretraga_Activity extends AppCompatActivity {
                                     Upis upis = new Upis();
                                     upis.execute();
 
-
                                     toastMessage("Promena je sačuvana");
-
 
                                     searchViewPretraga.requestFocus();
 
@@ -245,32 +238,6 @@ public class Pretraga_Activity extends AppCompatActivity {
                                     animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));
                                 }})
                             .setNegativeButton(android.R.string.no, null).show();
-
-                    /*Upis upis = new Upis();
-                    upis.execute();
-
-
-                    toastMessage("Promena je sačuvana");
-
-
-                    searchViewPretraga.requestFocus();
-
-                    int uvecajOd = Integer.parseInt(editTextTrenutnaKolicina.getText().toString());
-                    int uvecajDo = uvecajOd + Integer.parseInt(editTextUvecajZa.getText().toString());
-                    editTextUvecajZa.setText("");
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            editTextTrenutnaKolicina.setTypeface(null, Typeface.NORMAL);
-                            searchViewPretraga.setQuery("",false);
-                            tvIme.setVisibility(View.INVISIBLE);
-                            editTextUvecajZa.setVisibility(View.INVISIBLE);
-                            editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
-                        }
-                    }, 3000);
-
-                    animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));*/
                 }
             }
         });
@@ -352,10 +319,18 @@ public class Pretraga_Activity extends AppCompatActivity {
             int novaKolicina= Integer.parseInt(editTextUvecajZa1.getText().toString());
             novaKolicinaZaLogovanje=novaKolicina;
 
-            pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
-            pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje()+"+"+novaKolicina);
+            pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina + novaKolicina));
+            if (pronadjeniProizvod.getSabiranje().equals("0")) {
+                pronadjeniProizvod.setSabiranje(novaKolicina + "");
+            }
+            else if (novaKolicina >= 0){
+                pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje() + "+" + novaKolicina);
+            }
+            else {
+                pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje() + novaKolicina);
+            }
+//            pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje() + "+" + novaKolicina);
             writeSheet(pronadjeniProizvod.getKolicina(),pronadjeniProizvod.getSabiranje(),brojReda);
-
 
             return null;
         }
@@ -413,7 +388,6 @@ public class Pretraga_Activity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
         // formattedDate have current date/time
 
-
         file = new File(direktorijum,"logPromena.txt");
         if (!file.exists()) {
             try {
@@ -431,7 +405,7 @@ public class Pretraga_Activity extends AppCompatActivity {
             RandomAccessFile f = new RandomAccessFile(file,"rw");
             f.seek(file.length());
             Log.d("kurac", "nova kolicina kurac"+ novaKolicinaZaLogovanje);
-            f.write((formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ":, Ime:" + pronadjeniProizvod.getIme() + ":, Kolicina:" + (Integer.parseInt(pronadjeniProizvod.getKolicina())-novaKolicinaZaLogovanje) + "->"+pronadjeniProizvod.getKolicina()+ "\n").getBytes());
+            f.write((formattedDate + ": Sifra: " + pronadjeniProizvod.getId() + ":, Ime:" + pronadjeniProizvod.getIme() + ":, Kolicina: " + (Integer.parseInt(pronadjeniProizvod.getKolicina())-novaKolicinaZaLogovanje) + "->"+pronadjeniProizvod.getKolicina()+ "\n").getBytes());
             f.close();
 
 
@@ -448,9 +422,7 @@ public class Pretraga_Activity extends AppCompatActivity {
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
 
-
-    public void promene()
-    {
+    public void promene() {
         try {
            /* FileOutputStream fileOutputStream = new FileOutputStream(file,true);
             OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
@@ -480,20 +452,6 @@ public class Pretraga_Activity extends AppCompatActivity {
                 counter++;
             }
 
-
-           /* RandomAccessFile f = new RandomAccessFile(file,"rw");
-            f.seek(file.length()-10);
-            String promena;
-            String[] niz;
-            for(int i =0;i<3;i++)
-            {
-                Log.d("kurac2", "promene: "+f.readLine());
-                promena= f.readLine();
-                niz=promena.split(":");
-
-                listaPromena.add(niz[4]+" "+niz[6]+" "+niz[8]);
-
-            }*/
             final ListView listViewPrethodneIzmene = (ListView) findViewById(R.id.listViewPrethodneIzmene);
 
             PrethodneIzmene_ListAdapter_v2 adapter = new PrethodneIzmene_ListAdapter_v2(this, R.layout.prethodneizmene_listadapter_layout_v2, listaPromena);
@@ -506,6 +464,7 @@ public class Pretraga_Activity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     @Override
     public void onBackPressed() {
         AlertDialog al = new AlertDialog.Builder(this)
@@ -520,18 +479,3 @@ public class Pretraga_Activity extends AppCompatActivity {
                 .setNegativeButton(android.R.string.no, null).show();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
