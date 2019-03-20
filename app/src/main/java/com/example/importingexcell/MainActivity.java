@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     if (nizLastDirectory[nizLastDirectory.length - 1].equals("xls")) {
 
                         readExcel readExcel = new readExcel();
-
+                        lvInternalStorage.setEnabled(false);
                         readExcel.execute();
 
                         toastMessage("Podaci se učitavaju");
