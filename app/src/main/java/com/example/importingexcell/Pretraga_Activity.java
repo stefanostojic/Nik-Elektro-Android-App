@@ -20,8 +20,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -95,6 +97,9 @@ public class Pretraga_Activity extends AppCompatActivity {
         final SearchView searchViewPretraga = (SearchView) findViewById(R.id.etPretraga); // prethodno: editTextPretraga, takođe, sad se umesto getText() piše getQuery()
         final EditText editTextUvecajZa = (EditText) findViewById(R.id.editTextUvecajZa);
         final EditText editTextTrenutnaKolicina = (EditText) findViewById(R.id.editTextTrenutnaKolicina);
+        final TextView textViewSabiranje = (TextView) findViewById(R.id.textViewSabiranje);
+        final TextView textViewStaraKolicina = (TextView) findViewById(R.id.textViewStaraKolicina);
+
 
         //postavlja veličinu teksta polja za pretragu
         LinearLayout linearLayout1 = (LinearLayout) searchViewPretraga.getChildAt(0);
@@ -107,6 +112,8 @@ public class Pretraga_Activity extends AppCompatActivity {
         tvIme.setVisibility(View.INVISIBLE);
         editTextUvecajZa.setVisibility(View.INVISIBLE);
         editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
+        textViewSabiranje.setVisibility(View.INVISIBLE);
+        textViewStaraKolicina.setVisibility(View.INVISIBLE);
 
         for(int i = 0; i < elementiDirektorijuma.length - 1; i++)
         {
@@ -130,11 +137,16 @@ public class Pretraga_Activity extends AppCompatActivity {
                             tvIme.setVisibility(View.VISIBLE);
                             editTextUvecajZa.setVisibility(View.VISIBLE);
                             editTextTrenutnaKolicina.setVisibility(View.VISIBLE);
+                            textViewStaraKolicina.setVisibility(View.VISIBLE);
+                            textViewSabiranje.setVisibility(View.VISIBLE);
+
                             editTextUvecajZa.requestFocus();
                             tvIme.setText(p.getIme());
                             /*editTextUvecajZa.setText(p.getKolicina());*/
                             editTextTrenutnaKolicina.setText(p.getKolicina());
-                            pronadjeniProizvod=p;
+                            textViewSabiranje.setText(p.getSabiranje());
+                            textViewStaraKolicina.setText(p.getStaraKolicina());
+                            pronadjeniProizvod = p;
                             uspesnoPronadjenProizvod = true;
                             toastMessage("Proizvod je pronađen");
                             Log.d(TAG,"Proizvod je pronadjen");
@@ -174,7 +186,44 @@ public class Pretraga_Activity extends AppCompatActivity {
                 }
                 else
                 {
-                    Upis upis = new Upis();
+                    AlertDialog al = new AlertDialog.Builder(Pretraga_Activity.this)
+                            .setTitle("Sačuvaj?")
+                            .setMessage("Da li ste sigurni da želite da sačuvate promenu?")
+                            .setIcon(R.drawable.edit_white)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Upis upis = new Upis();
+                                    upis.execute();
+
+
+                                    toastMessage("Promena je sačuvana");
+
+
+                                    searchViewPretraga.requestFocus();
+
+                                    int uvecajOd = Integer.parseInt(editTextTrenutnaKolicina.getText().toString());
+                                    int uvecajDo = uvecajOd + Integer.parseInt(editTextUvecajZa.getText().toString());
+                                    editTextUvecajZa.setText("");
+
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            editTextTrenutnaKolicina.setTypeface(null, Typeface.NORMAL);
+                                            searchViewPretraga.setQuery("",false);
+                                            tvIme.setVisibility(View.INVISIBLE);
+                                            editTextUvecajZa.setVisibility(View.INVISIBLE);
+                                            editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
+                                            textViewSabiranje.setVisibility(View.INVISIBLE);
+                                            textViewStaraKolicina.setVisibility(View.INVISIBLE);
+                                        }
+                                    }, 3000);
+
+                                    animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));
+                                }})
+                            .setNegativeButton(android.R.string.no, null).show();
+
+                    /*Upis upis = new Upis();
                     upis.execute();
 
 
@@ -195,10 +244,12 @@ public class Pretraga_Activity extends AppCompatActivity {
                             tvIme.setVisibility(View.INVISIBLE);
                             editTextUvecajZa.setVisibility(View.INVISIBLE);
                             editTextTrenutnaKolicina.setVisibility(View.INVISIBLE);
+                            textViewSabiranje.setVisibility(View.INVISIBLE);
+                            textViewStaraKolicina.setVisibility(View.INVISIBLE);
                         }
                     }, 3000);
 
-                    animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));
+                    animateEditText(uvecajOd, uvecajDo, ((EditText) findViewById(R.id.editTextTrenutnaKolicina)));*/
                 }
             }
         });
@@ -279,7 +330,17 @@ public class Pretraga_Activity extends AppCompatActivity {
                 int staraKolicina= Integer.parseInt(pronadjeniProizvod.getKolicina());
                 int novaKolicina= Integer.parseInt(editTextUvecajZa1.getText().toString());
                 pronadjeniProizvod.setKolicina(String.valueOf(staraKolicina+novaKolicina));
-                writeSheet(pronadjeniProizvod.getKolicina(),brojReda);
+                if (pronadjeniProizvod.getSabiranje().equals("0")) {
+                    pronadjeniProizvod.setSabiranje(novaKolicina + "");
+                }
+                else
+                {
+                    if (novaKolicina > 0)
+                        pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje() + "+" + novaKolicina);
+                    else
+                        pronadjeniProizvod.setSabiranje(pronadjeniProizvod.getSabiranje() + novaKolicina);
+                }
+                writeSheet(pronadjeniProizvod.getKolicina(), pronadjeniProizvod.getSabiranje(), brojReda);
 
             return null;
         }
@@ -290,7 +351,7 @@ public class Pretraga_Activity extends AppCompatActivity {
         }
     }
 
-    public static void writeSheet(String data, int i) {
+    public static void writeSheet(String data,String data2, int i) {
         HSSFWorkbook workbook;
 
         try {
@@ -307,6 +368,8 @@ public class Pretraga_Activity extends AppCompatActivity {
             //Row row = workbook.getSheetAt(0).createRow(0);
             Cell cell = workbook.getSheetAt(0).getRow(i).getCell(6);
             cell.setCellValue(data);
+            Cell cell2 = workbook.getSheetAt(0).getRow(i).getCell(7);
+            cell2.setCellValue(data2);
 
             file.close();
 
@@ -361,10 +424,19 @@ public class Pretraga_Activity extends AppCompatActivity {
         onamadialog.show(getSupportFragmentManager(),"O nama");
     }
 
-    /*@Override
+    @Override
     public void onBackPressed() {
-        finish();
-    }*/
+        AlertDialog al = new AlertDialog.Builder(this)
+                .setTitle("Upozorenje")
+                .setMessage("Da li ste sigurni?")
+                .setIcon(R.drawable.baseline_close_black_18dp)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
 }
 
 

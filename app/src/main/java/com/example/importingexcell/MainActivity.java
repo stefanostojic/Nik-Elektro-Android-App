@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     if (nizLastDirectory[nizLastDirectory.length - 1].equals("xls")) {
 
                         readExcel readExcel = new readExcel();
-
+                        lvInternalStorage.setEnabled(false);
                         readExcel.execute();
 
                         toastMessage("Podaci se učitavaju");
@@ -121,17 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 pathHistory = new ArrayList<String>();
                 pathHistory.add(count,System.getenv("EXTERNAL_STORAGE"));
                 Log.d(TAG, "btnSDCard: " + pathHistory.get(count));
-                //checkInternalStorage();
-
-                ArrayList<File> files = findExcell(Environment.getExternalStorageDirectory());
-                FilePathStrings= new String[files.size()];
-                for(int i=0;i<files.size()-1;i++)
-                    FilePathStrings[i]=files.get(i).getPath();
-
-                ArrayAdapter<String> adapter= new ArrayAdapter<String>
-                        (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
-                lvInternalStorage.setAdapter(adapter);
-
+                checkInternalStorage();
             }
         });
     }
@@ -180,36 +170,83 @@ public class MainActivity extends AppCompatActivity {
                 Row row=sheet.getRow(r);
                 int cellsCount = row.getPhysicalNumberOfCells();
                 //celije krecu od 1 zbor jebenog plusa i cellCount -1 zbog zadnje prazne celije
-                for(int c=1;c<cellsCount;c++)
+                Log.d("kurac", "cellsCOunt"+cellsCount);
+
+                for(int c=1;c<=cellsCount;c++)
                 {
-                    if (getCellAsString(row,6,formulaEvaluator).isEmpty())
+                    switch(c)
                     {
-                        if (c == 3 || c == 4 || c==6)
+                        case 1:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 2:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 5:
+                            sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 6:
+                            if(getCellAsString(row,c,formulaEvaluator).isEmpty())
+                                sb.append(0+"`");
+                            else
+                                sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        case 7:
+                            if(getCellAsString(row,c,formulaEvaluator).isEmpty())
+                                sb.append(0+"`");
+                            else
+                                sb.append(getCellAsString(row,c,formulaEvaluator)+"`");
+                            break;
+                        default:
+                            break;
+
+
+                    }
+
+
+                    /*if (getCellAsString(row,6,formulaEvaluator).isEmpty())
+                    {
+                        if (c == 3 || c == 4)
                         {
                             continue;
                         } else {
-                            if(c==5)
+                            if(c==6)
                             {
                                sb.append(0+"`");
+                            }
+                            else if(getCellAsString(row,7,formulaEvaluator).isEmpty()&& c==7)
+                            {
+                                sb.append(0+"`");
+                                Log.d("kurac", "USAO ");
+                            }
+
+                            else {
+                                String value = getCellAsString(row, c, formulaEvaluator);
+                                sb.append(value + "`");
+                                if(c==7)
+                                    Log.d(TAG, "vrednost "+value);
+                            }
+                        }
+                    }
+                    else
+                        {
+                            if (c == 3 || c == 4)
+                            {
+                                continue;
+                            }
+                             else if(getCellAsString(row,7,formulaEvaluator).isEmpty()&& c==7)
+                            {
+                                sb.append(0+"`");
                             }
                             else {
                                 String value = getCellAsString(row, c, formulaEvaluator);
                                 sb.append(value + "`");
                             }
-                        }
-                    } else
-                        {
-                            if (c == 3 || c == 4 || c==5)
-                            {
-                                continue;
-                            } else {
-                                String value = getCellAsString(row, c, formulaEvaluator);
-                                sb.append(value + "`");
-                            }
-                        }
+                        }*/
                 }
                 sb.append(";");
             }
+            Log.d("kurac", "sb vrednost: "+sb);
             parseStringBuilder(sb);
             finished=true;
         }catch (FileNotFoundException e){
@@ -226,11 +263,16 @@ public class MainActivity extends AppCompatActivity {
         {
             String[] column= rows[i].split("`");
             String id= column[0];
-            String kolicina = column[2];
-            String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
-            Log.d(TAG, "data from row"+cellInfo);
+            String naziv= column[1];
+            String staraKolicina = column[2];
+            String popisanaKolicina = column[3];
+            Log.d("kurac", "sabiranje"+column[4]);
+           String sabiranje = column[4];
+           // String sabiranje="idiot";
+          //  String cellInfo= "(sifra,ime,kolicina):("+id+","+column[1]+","+kolicina+")";
+           // Log.d(TAG, "data from row"+cellInfo);
 
-            proizvodi.add(new Proizvod(id,column[1],kolicina));
+            proizvodi.add(new Proizvod(id,naziv,popisanaKolicina,sabiranje,staraKolicina));
         }
 
         /*TextView tw = (TextView) findViewById(R.id.textView);
@@ -264,19 +306,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkInternalStorage(){
-
-
-        /*File f = new File("sdcard/Download");
+        File f = new File("sdcard/Download");
         Log.d(TAG, "checkInternalStorage: " + pathHistory.get(count));
 //        File f = new File(pathHistory.get(count));
         File[] xlsFiles = f.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file)
             {
-                *//*if (file.getPath().endsWith(".xls") || file.isDirectory())
+                /*if (file.getPath().endsWith(".xls") || file.isDirectory())
                     return true;
                 else
-                    return false;*//*
+                    return false;*/
                 return (file.getPath().endsWith(".xls"));
             }
         });
@@ -291,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
             FilePathStrings[i]=xlsFiles[i].getPath();
             FileNameStrings[i]=xlsFiles[i].getName();
 
-        }*/
+        }
 
        /* try {
             if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -317,10 +357,10 @@ public class MainActivity extends AppCompatActivity {
                     j++;
                 }
             }*/
-            /*ArrayAdapter<String> adapter= new ArrayAdapter<String>
+            ArrayAdapter<String> adapter= new ArrayAdapter<String>
                     (MainActivity.this,android.R.layout.simple_list_item_1,FilePathStrings);
             lvInternalStorage.setAdapter(adapter);
-*/
+
        /* }catch(NullPointerException e){
 
         }*/
@@ -348,29 +388,4 @@ public class MainActivity extends AppCompatActivity {
     {
         return fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
     }
-
-    public ArrayList<File> findExcell(File f)
-    {
-
-        ArrayList<File> fileList = new ArrayList<File>();
-        listFile = f.listFiles();
-        for(File file: listFile)
-        {
-            if(file.isDirectory() && !file.isHidden())
-            {
-                fileList.addAll(findExcell(file));
-            }
-            else
-            {
-                if(file.getName().endsWith(".xls"))
-                {
-                    fileList.add(file);
-                }
-            }
-
-        }
-        return fileList;
-
-    }
-
 }
